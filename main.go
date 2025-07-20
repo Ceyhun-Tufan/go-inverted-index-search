@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gosearch/core"
 	"net/http"
 
@@ -29,16 +28,30 @@ func search(c *gin.Context) {
 		return
 	}
 
-	result := core.Search(query)
+	tokenized := core.Tokenize(&query)
 
-	if result == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't find an id."})
-		return
+	if len(tokenized) == 1 {
+
+		result := core.Search(tokenized[0])
+
+		if result == nil {
+			c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't find an id."})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"result": result})
+
+	} else {
+		result := core.SearchMulti(tokenized)
+
+		if result == nil {
+			c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't find an id (multi)."})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"result": result})
 	}
 
-	fmt.Printf("core.Search(query): %v\n", result)
-
-	c.JSON(http.StatusOK, gin.H{"result": result})
 }
 
 func addIndex(c *gin.Context) {

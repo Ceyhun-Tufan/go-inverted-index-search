@@ -74,7 +74,7 @@ func Tokenize(val *string) []string {
 	return strings.Fields(cleaned)
 }
 
-func Search(val string) []string {
+func Search(val string) []int {
 
 	rows, err := DB.Query(fmt.Sprintf("SELECT doc_id FROM inverted_index WHERE token == '%s'", val))
 	if err != nil {
@@ -83,14 +83,14 @@ func Search(val string) []string {
 	}
 	defer rows.Close()
 
-	var docIDs []string
+	var docIDs []int
 	for rows.Next() {
 		var docID int
 		if err := rows.Scan(&docID); err != nil {
 			log.Println("Scan error:", err)
 			continue
 		}
-		docIDs = append(docIDs, fmt.Sprintf("%d", docID))
+		docIDs = append(docIDs, docID)
 	}
 
 	if len(docIDs) > 0 {
@@ -98,4 +98,46 @@ func Search(val string) []string {
 	}
 
 	return nil
+}
+
+func SearchMulti(val []string) []int {
+	if len(val) == 0 {
+		return nil
+	}
+
+	placeholders := strings.Repeat("?,", len(val))
+	placeholders = strings.TrimRight(placeholders, ",")
+
+	query := fmt.Sprintf(`
+		SELECT doc_id
+		FROM inverted_index
+		WHERE token IN (%s)
+		GROUP BY doc_id
+		HAVING COUNT(DISTINCT token) = ?
+	`, placeholders) // A LOT FASTER AAA LOOOOTTT THAN INTERSECT
+
+	args := make([]interface{}, len(val)+1)
+	for i, token := range val {
+		args[i] = token
+	}
+	args[len(val)] = len(val) // declaring the DISCTINC TOKEN number
+
+	rows, err := DB.Query(query, args...)
+	if err != nil {
+		log.Println("Query error:", err)
+		return nil
+	}
+	defer rows.Close()
+
+	var docIDs []int
+	for rows.Next() {
+		var docID int
+		if err := rows.Scan(&docID); err != nil {
+			log.Println("Scan error:", err)
+			continue
+		}
+		docIDs = append(docIDs, docID)
+	}
+
+	return docIDs
 }
