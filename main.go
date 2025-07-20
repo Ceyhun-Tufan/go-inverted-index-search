@@ -25,14 +25,14 @@ func registerRoutes(r *gin.Engine) {
 func search(c *gin.Context) {
 	query := c.Query("q")
 	if query == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "query parameter 'q' is required"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "query parameter is required"})
 		return
 	}
 
 	result := core.Search(query)
 
 	if result == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't found any result."})
+		c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't find id."})
 	}
 
 	fmt.Printf("core.Search(query): %v\n", result)
