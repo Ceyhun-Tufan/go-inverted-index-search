@@ -32,7 +32,8 @@ func search(c *gin.Context) {
 	result := core.Search(query)
 
 	if result == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't find id."})
+		c.JSON(http.StatusBadRequest, gin.H{"result": "Couldn't find an id."})
+		return
 	}
 
 	fmt.Printf("core.Search(query): %v\n", result)
