@@ -1,5 +1,5 @@
 
-# GoSearch - English - [Türkçe](#türkçe-readme)
+# GoSearch - English - [Türkçe](#gosearch---türkçe)
 
 
 GoSearch is a **lightweight** and **blazingly fast** search engine implemented in Go, utilizing an inverted index stored in a SQLite database. It provides a RESTful API for indexing documents and performing search queries. The project uses the Gin web framework for handling HTTP requests and responses, and it supports basic text processing, such as tokenization, to facilitate efficient search operations. 
@@ -123,8 +123,7 @@ gosearch/
 ---
 ---
 
-# GoSearch <a name="türkçe-readme-section"></a>
-
+## GoSearch - Türkçe
 
 GoSearch, Go dilinde geliştirilmiş **hafif** ve **çok hızlı** bir arama motorudur. SQLite veritabanında ters indeks (inverted index) kullanarak çalışır. RESTful API üzerinden belgeleri indeksleme ve arama sorguları gerçekleştirme imkanı sunar. Proje, HTTP isteklerini ve yanıtlarını yönetmek için Gin web çerçevesini kullanır ve temel metin işleme (tokenization) ile verimli arama işlemleri sağlar.
 
